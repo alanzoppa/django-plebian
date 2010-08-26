@@ -19,7 +19,7 @@ class NewsItem(models.Model):
     title = models.CharField(max_length=160)
     slug = models.SlugField(max_length=50)
     published = models.BooleanField(default=True)
-    contributor = models.ForeignKey(User, related_name="contributed_article_set", required=False) 
+    contributor = models.ForeignKey(User, related_name="contributed_article_set", blank=True, null=True,) 
     creator = models.ForeignKey(User, related_name="created_news_item_set", editable=False) 
     modifier = models.ForeignKey(User, related_name="modified_news_item_set", editable=False)
     description = models.CharField(max_length=320)

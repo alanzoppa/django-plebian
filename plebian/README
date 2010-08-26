@@ -1,0 +1,5 @@
+Intended as a collection of generic apps for inclusion in various Django projects.
+
+Just run `setup.py install`, add `'plebian.news'` (or whatever) to your installed apps, and run `./manage.py syncdb`.
+
+Templates are included but should be overridden by all but the most daring.

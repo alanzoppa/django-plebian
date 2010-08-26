@@ -6,7 +6,7 @@ setup(
     description='Commonly-used applications for Django projects',
     author='C. Alan Zoppa',
     author_email='alan.zoppa@gmail.com',
-    url='http://code.google.com/none-yet/',
+    url='http://github.com/alanzoppa/django-plebian',
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,

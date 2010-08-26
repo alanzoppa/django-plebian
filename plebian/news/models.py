@@ -1,6 +1,7 @@
 import datetime
 import reversion
 from django.db import models
+from django.contrib.auth.models import User
 
 class PublishedArticleManager(models.Manager):
     def get_query_set(self):

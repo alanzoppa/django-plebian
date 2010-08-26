@@ -1,6 +1,5 @@
 from django.contrib import admin
 from plebian.news.models import *
-import multilingual
 from plebian.news.forms import NewsItemForm
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 

@@ -1,7 +1,7 @@
 import datetime
 from haystack.indexes import *
 from haystack import site
-from omronus.news.models import NewsItem
+from plebian.news.models import NewsItem
 
 class NewsItemIndex(SearchIndex):
     text = CharField(document=True, use_template=True, model_attr='body')

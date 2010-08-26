@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='django-plebian',
-    version='0.1.1',
+    version='0.1.2',
     description='Commonly-used applications for Django projects',
     author='C. Alan Zoppa',
     author_email='alan.zoppa@gmail.com',

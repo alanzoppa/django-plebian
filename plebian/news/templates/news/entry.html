@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load cache cms_tags i18n %}
+
+{% block RSS %}<link rel="alternate" type="application/rss+xml" title="RSS" href="/rss/latest/{{ newsentry.section }}/" />{% endblock %}
+
+
+{% block title %}{{ newsentry.humanized_section }}{% endblock %}
+
+{% block description %}{{ newsentry.description }}{% endblock %}
+
+{% block bodyid %}article-list-page{% endblock %}
+
+{% block content %}
+
+	<div id="primary-content" class="clearfix">
+			
+			<h1 id="page-title">{{ newsentry.title }}</h1>	
+            <h3 class="date">{{ newsentry.live|date:"D d M Y" }}</h3>
+					
+
+    <div id="content-left">
+
+        <div id="article-list" class="article">
+            <h4 class="description">{{ newsentry.description }}</h4>
+            {{ newsentry.body|safe }}
+            <div class="clear"></div>
+            <div class="bottom tpng"></div>
+												
+        </div><!--/article-list-->
+    </div><!--/content-left-->
+			
+			<div id="content-right">
+				
+				<!-- where to buy : -->
+
+				<div id="module-archives" class="module-right">
+
+		<div class="top"></div> 
+		<div class="content sidebar">
+            <h3>
+                {% ifequal recententries.0 "press" %}
+                    {% trans "Recent Press Releases" %}
+                {% else %}
+                    {% trans "Recent News Items" %}
+                {% endifequal %}
+            </h3>
+            <ul class="newsitems">
+                {% for entry in recententries %}
+                {% ifnotequal newsentry.pk entry.pk %}
+                <li>
+                    <h3><a href="{{ entry.get_absolute_url }}">{{ entry }}</a></h3>
+                    <h4>{{ entry.live|date:"D d M Y" }}</h4>
+                    <h5>{{ entry.description }}</h5>
+                </li>
+                {% endifnotequal %}
+                {% endfor %}
+                <p><strong><a href="/{{ recententries.0.section }}/?page=2">More &raquo;</a></strong></p>
+            </ul>
+
+		</div><!--/content-->
+
+	<div class="bottom tpng"></div>
+	  </div><!--/module-archives-->
+
+			</div><!--/content-right-->
+		</div><!--/#primary-content-->
+		
+{% endblock %}
+

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load cache cms_tags %}
+
+{% block RSS %}<link rel="alternate" type="application/rss+xml" title="RSS" href="/rss/latest/{{ newsentries.0.section }}/" />{% endblock %}
+
+{% block title %}{{ newsentries.0.humanized_section }}{% endblock %}
+
+{% block content %}
+
+
+	<div id="primary-content" class="clearfix">
+
+        <h1 id="page-title">{{ newsentries.0.humanized_section }}</h1>
+	<div id="location-northamerica" class="location-section clearfix">
+
+        <div class="top"></div>
+
+        <ul class="newsitems">
+
+
+
+
+            {% for entry in newsentries %}	
+
+                <li>
+                    <h3><a href="{{ entry.get_absolute_url }}">{{ entry }}</a></h3>
+                    <h4>{{ entry.live|date:"D d M Y" }}</h4>
+                    <div class="lead-in">
+                        <h5>{{ entry.description }}</h5>
+                        {{ entry.body|truncatewords_html:40|removetags:"script img object span font"|safe }}
+                    </div>
+                </li>
+
+            {% endfor %}
+
+        </ul>
+
+
+
+<p class="paginator">Page:</p>
+
+{% if page.has_previous %}
+    <a class="paginator" href="?page={{ page.previous_page_number }}">&laquo;</a>
+{% endif %}
+
+
+{% if page.paginator %}
+	{% for i in page.paginator.page_range %}
+		<a class="paginator" href="?page={{ i }}">{{ i }}</a>
+	{% endfor %}
+{% endif %}
+
+{% if page.has_next %}
+    <a class="paginator" href="?page={{ page.next_page_number }}">&raquo;</a>
+{% endif %}
+
+
+        <div class="bottom tpng"></div>
+        </div><!--/location-northamerica-->
+
+    </div><!--/#primary-content-->
+		
+{% endblock %}
+

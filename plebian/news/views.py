@@ -9,13 +9,11 @@ from django.conf import settings
 from plebian.news.models import *
 
 
-@cache_page(60*10)
 def newsentry(request, slug, section):
     newsentry = get_object_or_404(NewsItem, slug=slug, section=section, published=True, live__lte=datetime.datetime.now(),)
     recententries = NewsItem.objects.filter(published=True, section=section, live__lte=datetime.datetime.now())[:10]
     return render_to_response('news/entry.html', {'newsentry': newsentry, 'recententries': recententries, }, context_instance=RequestContext(request)) 
 
-@cache_page(60*5)
 def index(request, section):
     newsentries = NewsItem.objects.filter(published=True, section=section, live__lte=datetime.datetime.now())
     paginator = Paginator(newsentries, 10)

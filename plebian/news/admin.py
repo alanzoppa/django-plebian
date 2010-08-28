@@ -10,7 +10,7 @@ class NewsItemAdmin(PublishableAdmin):
     form = NewsItemForm
 
     search_fields = ['title', 'description',]
-    list_display = ('__unicode__', 'humanized_section', 'contributor', 'published', 'live', 'created', 'updated', 'creator', 'updater',)
+    list_display = ('__unicode__', 'humanized_section', 'contributor', 'published', 'live', 'created', 'modified', 'creator', 'modifier',)
     list_filter = ['published', 'section', ]
     fieldsets = (
         (None, {

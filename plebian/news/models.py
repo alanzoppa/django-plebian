@@ -13,7 +13,8 @@ class NewsItem(Publishable, Ownable):
     slug = models.SlugField(max_length=50)
     section = models.CharField(max_length=160, default=sections[0][0], choices=sections)
     creator = models.ForeignKey(User, related_name="created_news_item_set", editable=False) 
-    updater = models.ForeignKey(User, related_name="modified_news_item_set", editable=False)
+    modifier = models.ForeignKey(User, related_name="modified_news_item_set", editable=False)
+    body = models.TextField(blank=True, null=True)
 
     def __unicode__(self):
         return self.title

@@ -12,6 +12,7 @@ class PublishableAdmin(admin.ModelAdmin):
         obj.modifier= request.user
         if add:
             obj.creator = request.user
-        if not obj.contributor:
-            obj.contributor = request.user
+        if hasattr(obj, 'contributor'):
+            if not obj.contributor:
+                obj.contributor = request.user
         obj.save()

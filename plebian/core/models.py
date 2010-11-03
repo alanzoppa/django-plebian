@@ -25,6 +25,9 @@ class Publishable(models.Model):
         abstract = True
 
 
+    def __unicode__(self):
+        return self.title
+
 class Ownable(models.Model):
     contributor = models.ForeignKey(User, related_name="contributed_article_set", blank=True, null=True,) 
 

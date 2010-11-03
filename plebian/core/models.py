@@ -15,6 +15,7 @@ class Publishable(models.Model):
     published = models.BooleanField(default=True)
     title = models.CharField(max_length=160)
     description = models.CharField(max_length=320)
+    slug = models.SlugField(max_length=50, unique=True)
 
 
     objects = models.Manager()

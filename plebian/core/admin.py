@@ -2,6 +2,7 @@ from django.contrib import admin
 
 
 class PublishableAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'slug': ('title',)}
 
     def save_model(self, request, obj, form, change):
         url = request.META['HTTP_REFERER']

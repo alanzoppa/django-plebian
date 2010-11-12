@@ -1,12 +1,6 @@
 from PIL import Image
 from django.conf import settings
 import os
-import json
-import random
-import hashlib
-import datetime
-from django.contrib.sites.models import Site
-from hmac import HMAC
 
 def create_thumbnail(image, x, y):
     size = x,y

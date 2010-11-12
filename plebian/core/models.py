@@ -1,6 +1,8 @@
 import datetime
 from django.db import models
 from django.contrib.auth.models import User
+from plebian.utils.thumbnail import create_autocropped_thumbnail
+from django.conf import settings
 
 class PublishedArticleManager(models.Manager):
     def get_query_set(self):
@@ -34,3 +36,38 @@ class Ownable(models.Model):
 
     class Meta:
         abstract = True
+
+class RelatedImage(models.Model):
+    published = models.BooleanField(default=True,)
+    primary = models.BooleanField(default=False)
+    title = models.CharField(max_length=160, null=True, blank=True)
+    image = models.ImageField(upload_to="related_images/images", null=True, blank=True, max_length=200)
+    caption = models.CharField(max_length=250, null=True, blank=True)
+
+    class Meta:
+        ordering = ('-primary',)
+        abstract = True
+
+    def __unicode__(self):
+        return self.title
+
+    def thumbnail(self, size):
+        return create_autocropped_thumbnail(self.image, size)
+
+    def thumbnail_dict(self):
+        return_dict = {}
+        for key,value in settings.THUMBNAIL_SIZES.iteritems():
+            return_dict[key] = self.thumbnail(value)
+        return return_dict
+
+    def as_dict(self):
+        obj = {
+            'primary': self.primary,
+            'thumbnail': self.thumbnail_dict(),
+            }
+
+        if self.title:
+            obj['title'] = self.title
+        if self.caption:
+            obj['caption'] = self.caption
+        return obj

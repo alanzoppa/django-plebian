@@ -1,41 +1,78 @@
 import datetime
 from django.db import models
-from django.contrib.auth.models import User
 from plebian.utils.thumbnail import create_autocropped_thumbnail
 from django.conf import settings
+from django.contrib.auth.models import User
 
-class PublishedArticleManager(models.Manager):
+class PublishedObjectManager(models.Manager):
     def get_query_set(self):
-        return super(PublishedArticleManager, self).get_query_set().filter(published=True, live__lte=datetime.datetime.now(),)
-
+        return super(PublishedObjectManager, self).get_query_set().filter(published=True, live__lte=datetime.datetime.now(),)
 
 
 class Publishable(models.Model):
     created = models.DateTimeField(auto_now_add=True, editable=False)
     modified = models.DateTimeField(auto_now=True, editable=False)
+    creator = models.ForeignKey(User, related_name="created_%(class)s_set", editable=False) 
+    modifier = models.ForeignKey(User, related_name="modified_%(class)s_set", editable=False)
     live = models.DateTimeField(help_text="Date this entry should go live. This is the only public-facing date.", default=datetime.datetime.now())
     published = models.BooleanField(default=True)
     title = models.CharField(max_length=160)
     description = models.CharField(max_length=320)
     slug = models.SlugField(max_length=50, unique=True)
 
-
     objects = models.Manager()
-    published_objects = PublishedArticleManager()
+    published_objects = PublishedObjectManager()
 
     class Meta:
         ordering = ('-live',)
         abstract = True
 
+    def get_ajax_url(self):
+        return "#%s/%s" % (self._meta.module_name, self.slug)
+
+    def _implemented_fields(self):
+        return [i for i in self._meta._name_map.iterkeys()]
+
+    def _get_image_set(self):
+        try:
+            return eval('self.%simage_set' % self._meta.module_name)
+        except AttributeError:
+            return False
+
+    def primary_thumb(self):
+        try:
+            image = self._get_image_set().filter(primary=True)[0]
+        except IndexError:
+            try:
+                image = self._get_image_set().all()[0]
+            except IndexError:
+                return False
+        except AttributeError:
+            ''' This probably means that there is no associated image model. '''
+            return False
+        return image.thumbnail_dict()
+
+    def as_simpledict(self):
+        obj = {
+           'id': self.id,
+           'title': self.title,
+           'description': self.description,
+           'get_ajax_url': self.get_ajax_url(),
+            }
+
+        if 'contributor' in self._implemented_fields():
+            obj['contributor'] = self.contributor.username
+
+        if 'category' in self._implemented_fields():
+            obj['category'] = self.category.title
+
+        if self.primary_thumb():
+            obj['thumbnail'] = self.primary_thumb()
+        return obj
 
     def __unicode__(self):
         return self.title
 
-class Ownable(models.Model):
-    contributor = models.ForeignKey(User, related_name="contributed_article_set", blank=True, null=True,) 
-
-    class Meta:
-        abstract = True
 
 class RelatedImage(models.Model):
     published = models.BooleanField(default=True,)

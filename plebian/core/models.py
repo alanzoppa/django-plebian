@@ -63,7 +63,7 @@ class Publishable(models.Model):
         if 'contributor' in self._implemented_fields():
             obj['contributor'] = self.contributor.username
 
-        if 'category' in self._implemented_fields():
+        if 'category' in self._implemented_fields() and self.category:
             obj['category'] = self.category.title
 
         if self.primary_thumb():

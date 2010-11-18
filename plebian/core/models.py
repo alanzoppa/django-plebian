@@ -27,9 +27,6 @@ class Publishable(models.Model):
         ordering = ('-live',)
         abstract = True
 
-    def get_ajax_url(self):
-        return "#%s/%s" % (self._meta.module_name, self.slug)
-
     def _implemented_fields(self):
         return [i for i in self._meta._name_map.iterkeys()]
 
@@ -38,6 +35,10 @@ class Publishable(models.Model):
             return eval('self.%simage_set' % self._meta.module_name)
         except AttributeError:
             return False
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('single_%s' % self._meta.module_name, (), {'slug': self.slug})
 
     def primary_thumb(self):
         try:
@@ -57,7 +58,6 @@ class Publishable(models.Model):
            'id': self.id,
            'title': self.title,
            'description': self.description,
-           'get_ajax_url': self.get_ajax_url(),
             }
 
         if 'contributor' in self._implemented_fields():
@@ -68,6 +68,10 @@ class Publishable(models.Model):
 
         if self.primary_thumb():
             obj['thumbnail'] = self.primary_thumb()
+
+        if self.get_absolute_url():
+            obj['get_absolute_url'] = self.get_absolute_url()
+
         return obj
 
     def __unicode__(self):
@@ -77,7 +81,7 @@ class Publishable(models.Model):
 class RelatedImage(models.Model):
     published = models.BooleanField(default=True,)
     primary = models.BooleanField(default=False)
-    title = models.CharField(max_length=160, null=True, blank=True)
+    title = models.CharField(max_length=160,)
     image = models.ImageField(upload_to="related_images/images", null=True, blank=True, max_length=200)
     caption = models.CharField(max_length=250, null=True, blank=True)
 

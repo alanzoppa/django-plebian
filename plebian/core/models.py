@@ -82,7 +82,7 @@ class RelatedImage(models.Model):
     published = models.BooleanField(default=True,)
     primary = models.BooleanField(default=False)
     title = models.CharField(max_length=160,)
-    image = models.ImageField(upload_to="related_images/images", null=True, blank=True, max_length=200)
+    image = models.ImageField(upload_to="related_images/images", max_length=200,)
     caption = models.CharField(max_length=250, null=True, blank=True)
 
     class Meta:

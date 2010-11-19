@@ -8,6 +8,10 @@ class PublishedObjectManager(models.Manager):
     def get_query_set(self):
         return super(PublishedObjectManager, self).get_query_set().filter(published=True, live__lte=datetime.datetime.now(),)
 
+class PermanentPublishedObjectManager(models.Manager):
+    def get_query_set(self):
+        return super(PermanentPublishedObjectManager, self).get_query_set().filter(published=True,)
+
 
 class Publishable(models.Model):
     created = models.DateTimeField(auto_now_add=True, editable=False)

@@ -1,5 +1,4 @@
 import random
-import json
 from django.test.client import Client
 from django.test import TestCase
 from django.conf import settings
